@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}Sign in{% endblock %}
+{% block content %}
+<div class="auth"><div class="card">
+  <h2>Sign in</h2>
+  <p class="muted">Sign in to book and manage your parking.</p>
+  {% if errors %}<div class="errors"><ul>{% for e in errors %}<li>{{ e }}</li>{% endfor %}</ul></div>{% endif %}
+  <form method="post" action="{% url 'login' %}">
+    {% csrf_token %}
+    <input type="hidden" name="next" value="{{ next }}">
+    <div class="field"><label for="username">Username</label><input type="text" id="username" name="username" value="{{ username }}" autocomplete="username" required autofocus></div>
+    <div class="field"><label for="password">Password</label><input type="password" id="password" name="password" autocomplete="current-password" required></div>
+    <button class="btn btn-block" type="submit">Sign in</button>
+  </form>
+  <p class="small muted" style="margin-top:1rem">New here? <a href="{% url 'register' %}">Create an account</a>. Staff? <a href="{% url 'admin_login' %}">Use the staff portal</a>.</p>
+</div></div>
+{% endblock %}

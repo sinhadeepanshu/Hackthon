@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block title %}Edit slot {{ slot.label }}{% endblock %}
+{% block content %}
+<div class="auth"><div class="card">
+  <h2>Edit slot {{ slot.label }}</h2>
+  {% if errors %}<div class="errors"><ul>{% for e in errors %}<li>{{ e }}</li>{% endfor %}</ul></div>{% endif %}
+  <form method="post" action="{% url 'admin_slot_edit' slot.id %}">
+    {% csrf_token %}
+    <div class="field"><label for="label">Slot label</label><input type="text" id="label" name="label" value="{{ form.label }}" required></div>
+    <div class="field"><label for="zone">Zone</label><input type="text" id="zone" name="zone" value="{{ form.zone }}" required></div>
+    <div class="field"><label for="slot_type">Type</label>
+      <select id="slot_type" name="slot_type">{% for t in types %}<option value="{{ t }}" {% if form.slot_type == t %}selected{% endif %}>{{ t }}</option>{% endfor %}</select></div>
+    <div class="field"><label for="status">Availability</label>
+      <select id="status" name="status">{% for s in statuses %}<option value="{{ s }}" {% if form.status == s %}selected{% endif %}>{{ s }}</option>{% endfor %}</select>
+      <div class="hint">Setting an occupied slot to available or maintenance ends its active booking.</div></div>
+    <button class="btn" type="submit">Save changes</button>
+    <a class="btn btn-ghost" href="{% url 'admin_slots' %}">Cancel</a>
+  </form>
+</div></div>
+{% endblock %}

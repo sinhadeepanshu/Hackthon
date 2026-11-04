@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}Book slot {{ slot.label }}{% endblock %}
+{% block content %}
+<div class="page-head"><h1 style="font-size:2.6rem">Book slot {{ slot.label }}</h1></div>
+<div class="two-col">
+  <div class="card">
+    <h3>Slot details</h3>
+    <dl class="details">
+      <dt>Slot</dt><dd>{{ slot.label }}</dd>
+      <dt>Zone</dt><dd>{{ slot.zone }}</dd>
+      <dt>Type</dt><dd>{{ slot.slot_type }}</dd>
+      <dt>Status</dt><dd><span class="badge badge-{{ slot.status }}">{{ slot.status }}</span></dd>
+    </dl>
+    <p class="muted small">The slot is reserved for you as soon as you confirm. You can cancel from My bookings.</p>
+  </div>
+  <div class="card">
+    <h3>Your details</h3>
+    {% if errors %}<div class="errors"><ul>{% for e in errors %}<li>{{ e }}</li>{% endfor %}</ul></div>{% endif %}
+    <form method="post" action="{% url 'book' slot.id %}">
+      {% csrf_token %}
+      <div class="field"><label for="name">Name</label><input type="text" id="name" name="name" value="{{ form.name }}" required autofocus></div>
+      <div class="field"><label for="vehicle_number">Vehicle registration number</label><input class="plate" type="text" id="vehicle_number" name="vehicle_number" value="{{ form.vehicle_number }}" placeholder="KA01AB1234" required><div class="hint">Letters, numbers, spaces and hyphens, 4 to 15 characters.</div></div>
+      <button class="btn" type="submit">Confirm booking</button>
+      <a class="btn btn-ghost" href="{% url 'slots' %}">Back to slots</a>
+    </form>
+  </div>
+</div>
+{% endblock %}

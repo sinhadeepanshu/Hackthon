@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block title %}Dashboard{% endblock %}
+{% block content %}
+<div class="page-head"><h1 style="font-size:2.6rem">Parking dashboard</h1><a class="btn" href="{% url 'admin_slots' %}">Manage slots</a></div>
+<div class="stats">
+  <div class="stat"><b data-count="total">{{ counts.total }}</b><span>Total slots</span></div>
+  <div class="stat green"><b data-count="available">{{ counts.available }}</b><span>Available</span></div>
+  <div class="stat red"><b data-count="occupied">{{ counts.occupied }}</b><span>Occupied</span></div>
+  <div class="stat yellow"><b data-count="maintenance">{{ counts.maintenance }}</b><span>Under maintenance</span></div>
+  <div class="stat"><b>{{ stats.active_bookings }}</b><span>Active bookings</span></div>
+  <div class="stat"><b>{{ stats.drivers }}</b><span>Registered drivers</span></div>
+</div>
+<div class="page-head"><h2>Recent bookings</h2><a href="{% url 'admin_bookings' %}">View all bookings</a></div>
+<div class="table-wrap">
+{% if recent %}
+<table>
+  <thead><tr><th>ID</th><th>Slot</th><th>Name</th><th>Vehicle</th><th>Booked at</th><th>Status</th></tr></thead>
+  <tbody>
+  {% for b in recent %}
+  <tr><td class="plate">KB-{{ b.id }}</td><td>{{ b.slot_label }}</td><td>{{ b.name }}</td><td class="plate">{{ b.vehicle_number }}</td><td>{{ b.created_at|date:"d M Y, H:i" }}</td><td><span class="badge badge-{{ b.status }}">{{ b.status }}</span></td></tr>
+  {% endfor %}
+  </tbody>
+</table>
+{% else %}<div class="empty">No bookings yet.</div>{% endif %}
+</div>
+<div data-live="{% url 'api_slots' %}" hidden></div>
+{% endblock %}

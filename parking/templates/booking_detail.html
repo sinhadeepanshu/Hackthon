@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}Booking KB-{{ booking.id }}{% endblock %}
+{% block content %}
+<div class="auth"><div class="card" style="width:min(560px,100%)">
+  {% if just_booked %}<h2>Booking confirmed</h2><p class="muted">Slot {{ booking.slot_label }} is reserved for {{ booking.name }}.</p>{% else %}<h2>Booking details</h2>{% endif %}
+  <dl class="details">
+    <dt>Booking ID</dt><dd class="plate">KB-{{ booking.id }}</dd>
+    <dt>Slot</dt><dd>{{ booking.slot_label }} (Zone {{ booking.slot_zone }}, {{ booking.slot_type }})</dd>
+    <dt>Name</dt><dd>{{ booking.name }}</dd>
+    <dt>Vehicle</dt><dd class="plate">{{ booking.vehicle_number }}</dd>
+    <dt>Booked at</dt><dd>{{ booking.created_at|date:"d M Y, H:i" }}</dd>
+    {% if booking.ended_at %}<dt>Ended at</dt><dd>{{ booking.ended_at|date:"d M Y, H:i" }}</dd>{% endif %}
+    <dt>Status</dt><dd><span class="badge badge-{{ booking.status }}">{{ booking.status }}</span></dd>
+  </dl>
+  <div class="actions">
+    <a class="btn" href="{% url 'my_bookings' %}">My bookings</a>
+    {% if booking.status == 'active' and can_cancel %}
+    <form class="inline-form" method="post" action="{% url 'cancel' booking.id %}" onsubmit="return confirm('Cancel this booking?')">{% csrf_token %}<button class="btn btn-danger" type="submit">Cancel booking</button></form>
+    {% endif %}
+  </div>
+</div></div>
+{% endblock %}

@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}Find a free bay{% endblock %}
+{% block content %}
+<section class="hero">
+  <div>
+    <h1>See a free bay before you reach the gate.</h1>
+    <p>Every parking bay is shown live. Pick a free one, enter your vehicle number and you are booked. Plans change? Cancel in one click.</p>
+    <p><strong data-count="available">{{ counts.available }}</strong> of <strong data-count="total">{{ counts.total }}</strong> bays are free right now.</p>
+    <div class="hero-actions">
+      <a class="btn" href="{% url 'slots' %}">View live slots</a>
+      {% if user.is_authenticated %}
+        {% if user.is_staff %}<a class="btn btn-ghost" href="{% url 'admin_dashboard' %}">Open dashboard</a>{% else %}<a class="btn btn-ghost" href="{% url 'my_bookings' %}">My bookings</a>{% endif %}
+      {% else %}
+        <a class="btn btn-ghost" href="{% url 'register' %}">Create a free account</a>
+      {% endif %}
+    </div>
+  </div>
+  <div>{% include "_baymap.html" %}</div>
+</section>
+<section style="margin-top:3rem">
+  <h2>How booking works</h2>
+  <div class="two-col" style="grid-template-columns:repeat(auto-fit,minmax(220px,1fr))">
+    <div class="card"><h3>1. Choose a bay</h3><p class="muted">Green bays are free. Tap one to start your booking.</p></div>
+    <div class="card"><h3>2. Enter your details</h3><p class="muted">Add your name and vehicle registration number.</p></div>
+    <div class="card"><h3>3. Park</h3><p class="muted">You get a booking confirmation. Cancel any time from My bookings.</p></div>
+  </div>
+</section>
+{% endblock %}

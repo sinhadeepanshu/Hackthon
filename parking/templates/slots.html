@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block title %}Live slots{% endblock %}
+{% block content %}
+<div class="page-head">
+  <div>
+    <h1 style="font-size:2.6rem">Live parking slots</h1>
+    <p class="muted" style="margin:0"><strong data-count="available">{{ counts.available }}</strong> available, <strong data-count="occupied">{{ counts.occupied }}</strong> occupied, <strong data-count="maintenance">{{ counts.maintenance }}</strong> closed, <strong data-count="total">{{ counts.total }}</strong> in total.</p>
+  </div>
+</div>
+{% include "_baymap.html" %}
+<p class="muted small" style="margin-top:.75rem">Select a green bay to book it. This map refreshes every few seconds.</p>
+{% endblock %}

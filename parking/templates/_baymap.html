@@ -1,0 +1,28 @@
+<div class="lot" data-live="{% url 'api_slots' %}">
+  <div class="lot-toolbar">
+    <div class="legend">
+      <span><i style="background:var(--bay)"></i>Available</span>
+      <span><i style="background:var(--brake)"></i>Occupied</span>
+      <span><i style="background:var(--paint)"></i>Closed for maintenance</span>
+    </div>
+    <div class="filters" role="group" aria-label="Filter slots">
+      <button type="button" class="on" data-filter="all">All</button>
+      <button type="button" data-filter="available">Available</button>
+      <button type="button" data-filter="occupied">Occupied</button>
+    </div>
+  </div>
+  {% for zone in zones %}
+  <section class="zone">
+    <h3>Zone {{ zone.name }}</h3>
+    <div class="bays">
+      {% for slot in zone.slots %}
+      <a class="bay" data-id="{{ slot.id }}" data-status="{{ slot.status }}" href="{% url 'book' slot.id %}" aria-label="Slot {{ slot.label }}, {{ slot.status }}" {% if slot.status != 'available' %}aria-disabled="true" tabindex="-1"{% endif %}>
+        <span class="bay-label">{{ slot.label }}</span>
+        <span class="bay-type">{{ slot.slot_type }}</span>
+      </a>
+      {% endfor %}
+    </div>
+  </section>
+  {% endfor %}
+  {% if not zones %}<p class="lot-note">No parking slots have been set up yet.</p>{% endif %}
+</div>

@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}My bookings{% endblock %}
+{% block content %}
+<div class="page-head"><h1 style="font-size:2.6rem">My bookings</h1><a class="btn" href="{% url 'slots' %}">Book a slot</a></div>
+<div class="table-wrap">
+{% if bookings %}
+<table>
+  <thead><tr><th>ID</th><th>Slot</th><th>Vehicle</th><th>Booked at</th><th>Status</th><th></th></tr></thead>
+  <tbody>
+  {% for b in bookings %}
+  <tr>
+    <td class="plate"><a href="{% url 'booking_detail' b.id %}">KB-{{ b.id }}</a></td>
+    <td>{{ b.slot_label }} <span class="muted small">Zone {{ b.slot_zone }}</span></td>
+    <td class="plate">{{ b.vehicle_number }}</td>
+    <td>{{ b.created_at|date:"d M Y, H:i" }}</td>
+    <td><span class="badge badge-{{ b.status }}">{{ b.status }}</span></td>
+    <td>{% if b.status == 'active' %}<form class="inline-form" method="post" action="{% url 'cancel' b.id %}" onsubmit="return confirm('Cancel this booking?')">{% csrf_token %}<button class="btn btn-danger btn-sm" type="submit">Cancel</button></form>{% endif %}</td>
+  </tr>
+  {% endfor %}
+  </tbody>
+</table>
+{% else %}
+<div class="empty">You have no bookings yet. <a href="{% url 'slots' %}">Pick a free slot</a> to get started.</div>
+{% endif %}
+</div>
+{% endblock %}

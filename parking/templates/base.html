@@ -1,0 +1,54 @@
+{% load static %}<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}Kerbside Parking{% endblock %} | Kerbside</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=IBM+Plex+Mono:wght@500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+{% if user.is_staff %}
+<div class="staff-bar"><div class="container"><span>Staff mode</span><span>Signed in as {{ user.username }}</span></div></div>
+{% endif %}
+<header class="site-header">
+  <div class="container">
+    <a class="brand" href="{% url 'home' %}"><span class="brand-mark">P</span>Kerbside</a>
+    <nav class="nav" aria-label="Main">
+      {% if user.is_staff %}
+        <a href="{% url 'admin_dashboard' %}" class="{% if page == 'dashboard' %}on{% endif %}">Dashboard</a>
+        <a href="{% url 'admin_slots' %}" class="{% if page == 'admin_slots' %}on{% endif %}">Manage slots</a>
+        <a href="{% url 'admin_bookings' %}" class="{% if page == 'admin_bookings' %}on{% endif %}">Bookings</a>
+        <a href="{% url 'slots' %}" class="{% if page == 'slots' %}on{% endif %}">Live map</a>
+      {% elif user.is_authenticated %}
+        <a href="{% url 'slots' %}" class="{% if page == 'slots' %}on{% endif %}">Book a slot</a>
+        <a href="{% url 'my_bookings' %}" class="{% if page == 'my_bookings' %}on{% endif %}">My bookings</a>
+      {% else %}
+        <a href="{% url 'home' %}" class="{% if page == 'home' %}on{% endif %}">Home</a>
+        <a href="{% url 'slots' %}" class="{% if page == 'slots' %}on{% endif %}">Live slots</a>
+      {% endif %}
+    </nav>
+    <div class="nav-user">
+      {% if user.is_authenticated %}
+        <span>{{ user.first_name }}</span>
+        <form class="inline-form" method="post" action="{% url 'logout' %}">{% csrf_token %}<button class="btn btn-ghost btn-sm" type="submit">Sign out</button></form>
+      {% else %}
+        <a class="btn btn-ghost btn-sm" href="{% url 'login' %}">Sign in</a>
+        <a class="btn btn-sm" href="{% url 'register' %}">Create account</a>
+        <a class="small" href="{% url 'admin_login' %}">Staff portal</a>
+      {% endif %}
+    </div>
+  </div>
+</header>
+<main>
+  <div class="container">
+    {% for message in messages %}<div class="flash flash-{{ message.tags }}" role="status">{{ message }}</div>{% endfor %}
+    {% block content %}{% endblock %}
+  </div>
+</main>
+<footer class="site-footer"><div class="container">Kerbside Smart Parking Management System. Slot availability refreshes automatically.</div></footer>
+<script src="{% static 'js/app.js' %}"></script>
+</body>
+</html>

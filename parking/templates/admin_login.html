@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}Staff sign in{% endblock %}
+{% block content %}
+<div class="auth staff"><div class="card">
+  <h2>Staff portal</h2>
+  <p class="muted">For parking administrators only. Drivers sign in <a href="{% url 'login' %}">here</a>.</p>
+  {% if errors %}<div class="errors"><ul>{% for e in errors %}<li>{{ e }}</li>{% endfor %}</ul></div>{% endif %}
+  <form method="post" action="{% url 'admin_login' %}">
+    {% csrf_token %}
+    <div class="field"><label for="username">Admin username</label><input type="text" id="username" name="username" value="{{ username }}" autocomplete="username" required autofocus></div>
+    <div class="field"><label for="password">Password</label><input type="password" id="password" name="password" autocomplete="current-password" required></div>
+    <button class="btn btn-block" type="submit">Sign in to staff portal</button>
+  </form>
+</div></div>
+{% endblock %}

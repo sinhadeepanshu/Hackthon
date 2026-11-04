@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block title %}Manage slots{% endblock %}
+{% block content %}
+<div class="page-head"><h1 style="font-size:2.6rem">Manage slots</h1></div>
+<div class="card" style="margin-bottom:1.5rem">
+  <h3>Add a slot</h3>
+  {% if errors %}<div class="errors"><ul>{% for e in errors %}<li>{{ e }}</li>{% endfor %}</ul></div>{% endif %}
+  <form method="post" action="{% url 'admin_slot_add' %}">
+    {% csrf_token %}
+    <div class="form-row">
+      <div class="field"><label for="label">Slot label</label><input type="text" id="label" name="label" value="{{ form.label }}" placeholder="A9" required></div>
+      <div class="field"><label for="zone">Zone</label><input type="text" id="zone" name="zone" value="{{ form.zone }}" placeholder="A" required></div>
+      <div class="field"><label for="slot_type">Type</label>
+        <select id="slot_type" name="slot_type">{% for t in types %}<option value="{{ t }}" {% if form.slot_type == t %}selected{% endif %}>{{ t }}</option>{% endfor %}</select></div>
+      <div class="field"><label for="status">Status</label>
+        <select id="status" name="status">{% for s in statuses %}<option value="{{ s }}" {% if form.status == s %}selected{% endif %}>{{ s }}</option>{% endfor %}</select></div>
+    </div>
+    <button class="btn" type="submit">Add slot</button>
+  </form>
+</div>
+<div class="table-wrap">
+{% if slots %}
+<table>
+  <thead><tr><th>Slot</th><th>Zone</th><th>Type</th><th>Status</th><th>Current booking</th><th></th></tr></thead>
+  <tbody>
+  {% for s in slots %}
+  <tr>
+    <td><strong>{{ s.label }}</strong></td><td>{{ s.zone }}</td><td>{{ s.slot_type }}</td>
+    <td><span class="badge badge-{{ s.status }}">{{ s.status }}</span></td>
+    <td>{% if s.vehicle_number %}<span class="plate">{{ s.vehicle_number }}</span>{% else %}<span class="muted">None</span>{% endif %}</td>
+    <td><div class="actions">
+      <a class="btn btn-ghost btn-sm" href="{% url 'admin_slot_edit' s.id %}">Edit</a>
+      <form class="inline-form" method="post" action="{% url 'admin_slot_delete' s.id %}" onsubmit="return confirm('Delete slot {{ s.label }}?')">{% csrf_token %}<button class="btn btn-danger btn-sm" type="submit">Delete</button></form>
+    </div></td>
+  </tr>
+  {% endfor %}
+  </tbody>
+</table>
+{% else %}<div class="empty">No slots yet. Add your first slot above.</div>{% endif %}
+</div>
+{% endblock %}

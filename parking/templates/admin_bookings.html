@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block title %}Bookings{% endblock %}
+{% block content %}
+<div class="page-head"><h1 style="font-size:2.6rem">All bookings</h1></div>
+<div class="tabs">
+  <a class="tab {% if current == '' %}on{% endif %}" href="{% url 'admin_bookings' %}">All</a>
+  <a class="tab {% if current == 'active' %}on{% endif %}" href="{% url 'admin_bookings' %}?status=active">Active</a>
+  <a class="tab {% if current == 'completed' %}on{% endif %}" href="{% url 'admin_bookings' %}?status=completed">Completed</a>
+  <a class="tab {% if current == 'cancelled' %}on{% endif %}" href="{% url 'admin_bookings' %}?status=cancelled">Cancelled</a>
+</div>
+<form class="search" method="get" action="{% url 'admin_bookings' %}">
+  <input type="hidden" name="status" value="{{ current }}">
+  <input type="text" name="q" value="{{ query }}" placeholder="Search by name, vehicle or slot" aria-label="Search bookings">
+  <button class="btn btn-sm" type="submit">Search</button>
+</form>
+<div class="table-wrap">
+{% if bookings %}
+<table>
+  <thead><tr><th>ID</th><th>Slot</th><th>Name</th><th>Vehicle</th><th>Account</th><th>Booked at</th><th>Status</th><th></th></tr></thead>
+  <tbody>
+  {% for b in bookings %}
+  <tr>
+    <td class="plate">KB-{{ b.id }}</td><td>{{ b.slot_label }}</td><td>{{ b.name }}</td><td class="plate">{{ b.vehicle_number }}</td><td>{{ b.account }}</td>
+    <td>{{ b.created_at|date:"d M Y, H:i" }}</td><td><span class="badge badge-{{ b.status }}">{{ b.status }}</span></td>
+    <td>{% if b.status == 'active' %}<form class="inline-form" method="post" action="{% url 'admin_booking_end' b.id %}" onsubmit="return confirm('End this booking and free the slot?')">{% csrf_token %}<button class="btn btn-ghost btn-sm" type="submit">End booking</button></form>{% endif %}</td>
+  </tr>
+  {% endfor %}
+  </tbody>
+</table>
+{% else %}<div class="empty">No bookings match this view.</div>{% endif %}
+</div>
+{% endblock %}
